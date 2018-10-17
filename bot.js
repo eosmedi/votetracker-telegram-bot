@@ -169,7 +169,7 @@ function TelegramBoter(token){
 
 
 var token = fs.readFileSync('.token', 'utf-8');
-var botter = new TelegramBoter(token);
+var botter = new TelegramBoter(token.trim());
 var socket = io('http://api.votetracker.io/');
 socket.on('log', (log) => {
     console.log('log', log);
