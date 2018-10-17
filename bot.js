@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
-const config = require('../config');
+const config = require('./config');
 const io = require('socket.io-client');
 
 function TelegramBoter(token){
