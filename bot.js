@@ -138,6 +138,7 @@ function TelegramBoter(token){
         }
 
         if(_watcher[type] && _watcher[type][typeValue]){
+            console.log(message, _watcher[type][typeValue]);
             Object.keys(_watcher[type][typeValue]).forEach((chatId) => {
                 var threshold = _watcher[type][typeValue][chatId];
                 if(log.lastRank){
