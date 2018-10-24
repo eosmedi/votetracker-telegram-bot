@@ -111,7 +111,20 @@ function TelegramBoter(token){
         if(log.lastRank){
             var message = typeValue+" rank changed from "+log.lastRank +" to "+log.rank;
         }else if(log.type){
-            console.log('notify', log.type);
+            var messageType = "";
+            if(log.producer && log.proxy){
+                type = 'producer';
+                typeValue = log.producer;
+            }else if(log.proxy){
+                type = 'proxy';
+                typeValue = log.proxy;
+
+            }else if(log.producer){
+                type = 'producer';
+                typeValue = log.producer;
+            }
+
+            var message = "["+type+"] "+typeValue+"'s voter "+log.voter +" ["+log.action+"] -> "+ "["+typeValue+"] staked="+(log.staked / 10000).toFixed(2)+' EOS';
         }else{
             var message = [
                 log.voter+' -> ',
