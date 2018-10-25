@@ -131,9 +131,9 @@ function TelegramBoter(token){
     }
 
     var messageTemplate = {
-        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS`,
-        vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS`,
-        rank: `$(producer) rank changed from $(lastRank) to $(rank) EOS`,
+        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS <a href="https://votetracker.io/">View Details in VoteTracker</a>`,
+        vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS <a href="https://votetracker.io/#/$(link)/$(to)">View Details in VoteTracker</a>`,
+        rank: `$(producer) rank changed from $(lastRank) to $(rank) EOS <a href="https://votetracker.io/">View Details in VoteTracker</a>`,
     }
     
     function templateEngine(tpl, data) {
@@ -168,9 +168,11 @@ function TelegramBoter(token){
         }else if(log.producer || log.proxy){
             var type = 'producer';
             log.to = log.producer;
+            log.link = 'producer';
             if(log.proxy){
                 type = 'proxy';
                 log.to = log.proxy;
+                log.link = 'voter';
             }
             log.target = type;
             template = messageTemplate.vote;
