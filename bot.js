@@ -125,6 +125,7 @@ function TelegramBoter(token){
 
     function sendMessageToChats(chatIds, message){
         chatIds.forEach((chatId) => {
+            console.log('send message to', chatId, message);
             bot.sendMessage(chatId, message);
         })
     }
