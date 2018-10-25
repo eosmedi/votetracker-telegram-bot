@@ -122,7 +122,6 @@ function TelegramBoter(token){
         return chatIds;
     }
 
-
     function sendMessageToChats(chatIds, message){
         chatIds.forEach((chatId) => {
             console.log('send message to', chatId, message);
@@ -131,7 +130,7 @@ function TelegramBoter(token){
     }
 
     var messageTemplate = {
-        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS \n\nhttps://votetracker.io`,
+        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS \n\nhttps://votetracker.io/#/$(link)/$(to)`,
         vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS \n\nView Details in  https://votetracker.io/#/$(link)/$(to)`,
         rank: `$(producer) rank changed from $(lastRank) to $(rank) \n\nhttps://votetracker.io`,
     }
@@ -154,12 +153,15 @@ function TelegramBoter(token){
         if(log.type){
             if(log.producer && log.proxy){
                 log.refType = 'proxy';
+                log.link = 'voter';
                 log.to = log.proxy;
             }else if(log.producer){
                 log.refType = 'producer';
                 log.to = log.producer;
+                log.link = 'producer';
             }else if(log.proxy){
                 log.refType = 'proxy';
+                log.link = 'voter';
                 log.to = log.proxy;
             }
             template = messageTemplate.stake;
@@ -199,7 +201,7 @@ function TelegramBoter(token){
 
         var voterStaked = log.staked / 10000;
         if(log.type){
-            voterStaked = log.staked;
+            voterStaked = log.staked.get;
         }
 
         var needNotifyChats = getNeedNotifyChats(type, typeValue, voterStaked);
