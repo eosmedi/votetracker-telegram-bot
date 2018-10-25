@@ -130,8 +130,8 @@ function TelegramBoter(token){
     }
 
     var messageTemplate = {
-        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS \n\nhttps://votetracker.io/#/$(link)/$(to)`,
-        vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS \n\nView Details in  https://votetracker.io/#/$(link)/$(to)`,
+        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS \n\nView Details in\nhttps://votetracker.io/#/$(link)/$(to)`,
+        vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS \n\nView Details in\nhttps://votetracker.io/#/$(link)/$(to)`,
         rank: `$(producer) rank changed from $(lastRank) to $(rank) \n\nhttps://votetracker.io`,
     }
 
