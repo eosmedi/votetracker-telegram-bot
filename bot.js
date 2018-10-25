@@ -194,6 +194,7 @@ function TelegramBoter(token){
         // producer proxy stake log
         if(log.producer && log.proxy){
             type = "producer";
+            typeValue = log[type];
         }
 
         var voterStaked = log.staked / 10000;
