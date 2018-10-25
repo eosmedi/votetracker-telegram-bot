@@ -280,9 +280,14 @@ function TelegramBoter(token){
 
 
 
-    var allChatIds = getAllChatId();
-
-    console.log(allChatIds);
+    bot.onText(/\/send (.+)/, (msg, match) => {
+        const chatId = msg.chat.id;
+        const resp = match[1];
+        if(chatId == "547278513"){
+            var allChatIds = getAllChatId();
+            bot.sendMessage(chatId, JSON.stringify(allChatIds));
+        }
+    });
 
 
     notifyProducer = function(producer, lastRank, index){
