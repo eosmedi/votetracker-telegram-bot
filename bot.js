@@ -200,6 +200,7 @@ function TelegramBoter(token){
         }
 
         var needNotifyChats = getNeedNotifyChats(type, typeValue, voterStaked);
+        console.log('notify', message, needNotifyChats);
         if(message) sendMessageToChats(needNotifyChats, message);
     }
 
