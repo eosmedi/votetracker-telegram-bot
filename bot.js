@@ -135,7 +135,7 @@ function TelegramBoter(token){
         vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS \n\nView Details in  https://votetracker.io/#/$(link)/$(to)`,
         rank: `$(producer) rank changed from $(lastRank) to $(rank) \n\nhttps://votetracker.io`,
     }
-    
+
     function templateEngine(tpl, data) {
         // console.log(tpl, data);
         var re = /\$\(([^\)]+)?\)/g, match;
@@ -202,7 +202,7 @@ function TelegramBoter(token){
         }
 
         var needNotifyChats = getNeedNotifyChats(type, typeValue, voterStaked);
-        console.log('notify', message, needNotifyChats);
+        console.log('notify', { type, typeValue, voterStaked, message, needNotifyChats });
         if(message) sendMessageToChats(needNotifyChats, message);
     }
 
