@@ -201,7 +201,7 @@ function TelegramBoter(token){
 
         var voterStaked = log.staked / 10000;
         if(log.type){
-            voterStaked = log.staked.get;
+            voterStaked = log.staked;
         }
 
         var needNotifyChats = getNeedNotifyChats(type, typeValue, voterStaked);
