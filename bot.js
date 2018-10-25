@@ -3,6 +3,7 @@ const fs = require('fs');
 const config = require('./config');
 const io = require('socket.io-client');
 
+
 function TelegramBoter(token){
     var bot = new TelegramBot(token, { polling: true });
     var file = config.database.bot_watcher;
@@ -102,7 +103,107 @@ function TelegramBoter(token){
         "\n\n");
     });
 
+
+    function getNeedNotifyChats(type, typeValue, voterStaked){
+        var chatIds = [];
+        if(_watcher[type] && _watcher[type][typeValue]){
+            var allChatIds = Object.keys(_watcher[type][typeValue]);
+            if(voterStaked){
+                allChatIds.forEach((chatId) => {
+                    var threshold = _watcher[type][typeValue][chatId];
+                    if(voterStaked >= threshold){
+                        chatIds.push(chatId);
+                    }
+                })
+            }else{
+                chatIds = allChatIds;
+            }
+        }
+        return chatIds;
+    }
+
+
+    function sendMessageToChats(chatIds, message){
+        chatIds.forEach((chatId) => {
+            bot.sendMessage(chatId, message);
+        })
+    }
+
+    var messageTemplate = {
+        stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS`,
+        vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS`,
+        rank: `$(producer) rank changed from $(lastRank) to $(rank) EOS`,
+    }
+    
+    function templateEngine(tpl, data) {
+        // console.log(tpl, data);
+        var re = /\$\(([^\)]+)?\)/g, match;
+        while(match = re.exec(tpl)) {
+            tpl = tpl.replace(match[0], data[match[1]])
+            re.lastIndex = 0;
+        }
+        return tpl;
+    }
+    
+    function getNotifyMessage(log){
+        var template = "";
+        if(log.staked && !log.type){
+            log.stake = (log.staked / 10000).toFixed(2);
+        }
+        if(log.type){
+            if(log.producer && log.proxy){
+                log.refType = 'proxy';
+                log.to = log.proxy;
+            }else if(log.producer){
+                log.refType = 'producer';
+                log.to = log.producer;
+            }else if(log.proxy){
+                log.refType = 'proxy';
+                log.to = log.proxy;
+            }
+            template = messageTemplate.stake;
+        }else if(log.lastRank){
+            template = messageTemplate.rank;
+        }else if(log.producer || log.proxy){
+            var type = 'producer';
+            log.to = log.producer;
+            if(log.proxy){
+                type = 'proxy';
+                log.to = log.proxy;
+            }
+            log.target = type;
+            template = messageTemplate.vote;
+        }
+    
+        if(template){
+            return templateEngine(template, log);
+        }else{
+            return template;
+        }
+    }
+
     function notify(log){
+        var type = 'producer';
+        if(log.proxy) type = 'proxy';
+        var typeValue = log[type];
+
+        var message = getNotifyMessage(log);
+        // producer proxy stake log
+        if(log.producer && log.proxy){
+            type = "producer";
+        }
+
+        var voterStaked = log.staked / 10000;
+        if(log.type){
+            voterStaked = log.staked;
+        }
+
+        var needNotifyChats = getNeedNotifyChats(type, typeValue, voterStaked);
+        if(message) sendMessageToChats(needNotifyChats, message);
+    }
+
+
+    function notify_OLD(log){
         var type = 'producer';
         if(log.proxy) type = 'proxy';
         var typeValue = log[type];
