@@ -279,13 +279,24 @@ function TelegramBoter(token){
     }
 
 
+    var _self = "547278513";
 
     bot.onText(/\/send (.+)/, (msg, match) => {
         const chatId = msg.chat.id;
         const resp = match[1];
-        if(chatId == "547278513"){
+        if(chatId == _self){
             var allChatIds = getAllChatId();
-            bot.sendMessage(chatId, JSON.stringify(allChatIds));
+            allChatIds = [chatId];
+            sendMessageToChats(allChatIds, resp);
+        }
+    });
+
+    
+    bot.onText(/\/status (.+)/, (msg, match) => {
+        const chatId = msg.chat.id;
+        const resp = match[1];
+        if(chatId == _self){
+            bot.sendMessage(chatId, JSON.stringify(_watcher));
         }
     });
 
