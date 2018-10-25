@@ -46,14 +46,18 @@ function TelegramBoter(token){
             if(_watcher[type] && _watcher[type][value]){
                 delete _watcher[type][value][chatId];
             }
-            return 'unwatch '+type+"="+value;
+            var msg = 'unwatch '+type+"="+value;
+            fs.appendFileSync(config.database.watch_log, msg+"\n");
+            return msg;
         }else{
             console.log(type, chatId, value);
             _watcher[type] = _watcher[type] || {};
             _watcher[type][value] = _watcher[type][value] || {};
             _watcher[type][value][chatId] = threshold;
             console.log(_watcher);
-            return 'watch '+type+"="+value +" threshold="+threshold;
+            var msg = 'watch '+type+"="+value +" threshold="+threshold;
+            fs.appendFileSync(config.database.watch_log, msg+"\n");
+            return msg;
         }
     }
 
@@ -103,6 +107,18 @@ function TelegramBoter(token){
         "\n\n");
     });
 
+
+    function getAllChatId(){
+        var uniqueMap = {};
+        for(var type in _watcher){
+            for(var value in _watcher[type]){
+                for(var chatId in _watcher[type][value]){
+                    uniqueMap[chatId] = 1;
+                }
+            }
+        }
+        return Object.keys(uniqueMap);
+    }
 
     function getNeedNotifyChats(type, typeValue, voterStaked){
         var chatIds = [];
@@ -261,6 +277,13 @@ function TelegramBoter(token){
             })
         }
     }
+
+
+
+    var allChatIds = getAllChatId();
+
+    console.log(allChatIds);
+
 
     notifyProducer = function(producer, lastRank, index){
         var nowIndex = index+1;

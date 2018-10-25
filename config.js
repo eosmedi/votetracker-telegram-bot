@@ -8,6 +8,7 @@ if(!fs.existsSync(BASE_DIR)){
 var config = {
     database: {
         bot_watcher: BASE_DIR+'bot_watcher.json',
+        watch_log: BASE_DIR+'watch.logs',
     }
 };
 
