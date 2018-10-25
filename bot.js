@@ -286,7 +286,7 @@ function TelegramBoter(token){
         const resp = match[1];
         if(chatId == _self){
             var allChatIds = getAllChatId();
-            allChatIds = [chatId];
+            // allChatIds = [chatId];
             sendMessageToChats(allChatIds, resp);
         }
     });
