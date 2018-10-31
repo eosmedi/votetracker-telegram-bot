@@ -312,7 +312,11 @@ function TelegramBoter(token){
                     const cid = allIds[index];
                     var chatInfo = await bot.getChat(cid);
                     console.log('chatInfo', chatInfo);
-                    bot.sendMessage(chatId, JSON.stringify(chatInfo));
+                    var msg = [chatInfo.first_name, chatInfo.last_name].join(" ");
+                    if(chatInfo.title){
+                        msg  = chatInfo.title;
+                    }
+                    bot.sendMessage(chatId, msg);
                 }
             })();
         }
