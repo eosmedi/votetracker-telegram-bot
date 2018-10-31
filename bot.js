@@ -296,14 +296,27 @@ function TelegramBoter(token){
     });
 
     
+    var chatInfo = {};
+
+
     bot.onText(/\/status (.+)/, (msg, match) => {
         const chatId = msg.chat.id;
         const resp = match[1];
         if(chatId == _self){
-            bot.sendMessage(chatId, JSON.stringify(_watcher));
+            (async () => {
+                var dataInfo = Object.assign({}, _watcher);
+                bot.sendMessage(chatId, 'producer: '+Object.keys(dataInfo.producer).length +  ' proxy: '+Object.keys(dataInfo.proxy).length );
+                var allIds = getAllChatId();
+                
+                for (let index = 0; index < allIds.length; index++) {
+                    const cid = allIds[index];
+                    var chatInfo = await bot.getChat(cid);
+                    console.log('chatInfo', chatInfo);
+                    bot.sendMessage(chatId, JSON.stringify(chatInfo));
+                }
+            })();
         }
     });
-
 
     notifyProducer = function(producer, lastRank, index){
         var nowIndex = index+1;
