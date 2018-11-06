@@ -148,6 +148,7 @@ function TelegramBoter(token){
     var messageTemplate = {
         stake: `$(refType):$(to)'s voter $(voter) [$(action)] amount=$(staked) EOS \n\nView Details in\nhttps://votetracker.io/#/$(link)/$(to)`,
         vote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS \n\nView Details in\nhttps://votetracker.io/#/voter/$(voter)`,
+        revote: `$(voter) [$(action) $(target)] ->  [$(to)] amount=$(stake) EOS  \n\nVotes weight change:$(diff_weight_change) %\n\nView Details in\nhttps://votetracker.io/#/voter/$(voter)`,
         rank: `$(producer) rank changed from $(lastRank) to $(rank) \n\nhttps://votetracker.io`,
     }
 
@@ -192,8 +193,12 @@ function TelegramBoter(token){
                 log.to = log.proxy;
                 log.link = 'voter';
             }
+           
             log.target = type;
             template = messageTemplate.vote;
+            if(log.diff_weight_change){
+                template = messageTemplate.revote;
+            }
         }
     
         if(template){
