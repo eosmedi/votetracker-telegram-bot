@@ -208,6 +208,11 @@ function TelegramBoter(token){
         if(log.proxy) type = 'proxy';
         var typeValue = log[type];
 
+        if(log.lastRank){
+            console.log('skip rankchange');
+            return;
+        }
+
         var message = getNotifyMessage(log);
         // producer proxy stake log
         if(log.producer && log.proxy){
